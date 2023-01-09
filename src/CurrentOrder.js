@@ -1,6 +1,9 @@
 import React from 'react';
+import _ from 'lodash';
 
-const CurrentOrder = ({ currentOrder, addToOrder, removeFromOrder }) => {
+const CurrentOrder = ({ currentOrder, addBeerToOrder, removeStyleFromOrder, removeBeerFromOrder }) => {
+  const groupedOrder = _.groupBy(currentOrder, 'style');
+  
   return (
     <div>
       <div
@@ -11,7 +14,6 @@ const CurrentOrder = ({ currentOrder, addToOrder, removeFromOrder }) => {
           width: '300px',
           height: '400px',
           backgroundColor: 'white',
-          border: '1px solid black',
           padding: '20px',
         }}
       >
@@ -20,24 +22,23 @@ const CurrentOrder = ({ currentOrder, addToOrder, removeFromOrder }) => {
           <p>Your order is empty.</p>
         ) : (
           <>
-            
-            <ul>
-              {currentOrder.map((item) => (
-                <li key={item.name}>
-                  {item.name}
-                  <button onClick={() => removeFromOrder(item.name)}>Remove group from order</button>
-                  <button onClick={() => removeFromOrder(item.name)}>+</button>
-                  <button onClick={() => removeFromOrder(item.name)}>-</button>
-                </li>
-              ))}
-            </ul>
-            
-        <p>Total items: {currentOrder.reduce((total, item) => total + item.quantity, 0)}</p> 
+            {Object.keys(groupedOrder).map((style) => (
+              <div key={style}>
+                <h3>Group - {style}</h3>
+                <button onClick={() => removeStyleFromOrder(style)}>Remove group from order</button>
+                {groupedOrder[style].map((item) => (
+            <div key={item.id}>
+              * {item.name} - {item.quantity}
+              <button onClick={() => addBeerToOrder(item.name, 1, item.style)}> + </button>
+              <button onClick={() => removeBeerFromOrder(item.name)}>-</button>
+            </div>
+          ))}
+              </div>
+            ))}
+            <div>Total items: {currentOrder.reduce((acc, item) => acc + item.quantity, 0)}</div>
           </>
         )}
-        
       </div>
-      
     </div>
   );
 };

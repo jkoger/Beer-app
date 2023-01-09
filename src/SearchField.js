@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Downshift from 'downshift';
 import _ from 'lodash';
 
-const SearchField = ({ beers, addToOrder, refreshBeers, removeFromOrder  }) => {
+const SearchField = ({ beers, addStyleToOrder, addBeerToOrder, refreshBeers, removeFromOrder  }) => {
   const [inputValue, setInputValue] = useState('');
   const [filteredItems, setFilteredItems] = useState(beers);
 
@@ -39,11 +39,11 @@ const SearchField = ({ beers, addToOrder, refreshBeers, removeFromOrder  }) => {
               {Object.keys(groupedBeers).map((style) => (
                 <div key={style}>
                   <h3>{style}</h3>
-                  <button onClick={() => addToOrder(style, 0)}> Add group to order </button>
+                  <button onClick={() => addStyleToOrder(style, 0)}> Add group to order </button>
                   {groupedBeers[style].map((item, index) => (
                     <div
                       {...getItemProps({
-                        key: item.name,
+                        key: item.id,
                         index,
                         item,
                         style: {
@@ -52,8 +52,8 @@ const SearchField = ({ beers, addToOrder, refreshBeers, removeFromOrder  }) => {
                         },
                       })}
                     >
-                      {item.brand} - {item.name}
-                      <button onClick={() => addToOrder(style, 0)}> Add beer to order </button>
+                      {item.brand} - {item.name} 
+                      <button onClick={() => addBeerToOrder(item.name, 1, item.style)}> Add beer to order </button>
                     </div>
                   ))}
                 </div>
