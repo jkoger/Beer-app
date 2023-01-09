@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Downshift from 'downshift';
 import _ from 'lodash';
 
@@ -7,17 +7,20 @@ const SearchField = ({ beers, addToOrder, refreshBeers, removeFromOrder  }) => {
   const [filteredItems, setFilteredItems] = useState(beers);
 
   const handleInputChange = (event) => {
-    if (!beers) {
-        return;
-    }
     setInputValue(event.target.value);
+  };
+
+  useEffect(() => {
+    if (!beers) {
+      return;
+    }
     setFilteredItems(
       beers.filter((item) =>
-        item.brand.toLowerCase().includes(event.target.value.toLowerCase()) ||
-        item.name.toLowerCase().includes(event.target.value.toLowerCase())
+        item.brand.toLowerCase().includes(inputValue.toLowerCase()) ||
+        item.name.toLowerCase().includes(inputValue.toLowerCase())
       )
     );
-  };
+  }, [beers, inputValue]);
 
   const groupedBeers = _.groupBy(filteredItems, 'style');
 

@@ -44,7 +44,7 @@ function App() {
       .then((response) => response.json())
       .then((data) => setBeers(data));
       console.log("Updated list");
-      console.log(setBeers());
+      console.log(beers);
   };
 
   
@@ -53,7 +53,7 @@ function App() {
     <div className="App">
       <h1 style={{ textAlign: 'center' }}>Welcome to beer ordering app</h1>
       <SearchField beers={beers} addToOrder={addToOrder} refreshBeers={refreshBeers}/>
-      {/* <BeerList refresh={refresh} /> */}
+      {/* <BeerList refresh={refresh} setRefresh={setRefresh} /> */}
       
       <CurrentOrder currentOrder={currentOrder} addToOrder={addToOrder} removeFromOrder={removeFromOrder}/> {/* Pass the addToOrder function to the BeerList component */}
       
