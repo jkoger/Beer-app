@@ -10,10 +10,9 @@ const CurrentOrder = ({ currentOrder, addBeerToOrder, removeStyleFromOrder, remo
         style={{
           position: 'fixed',
           right: '20px',
-          top: '20px',
-          width: '300px',
+          top: '50px',
+          width: '500px',
           height: '400px',
-          backgroundColor: 'white',
           padding: '20px',
         }}
       >
@@ -24,21 +23,30 @@ const CurrentOrder = ({ currentOrder, addBeerToOrder, removeStyleFromOrder, remo
           <>
             {Object.keys(groupedOrder).map((style) => (
               <div key={style}>
-                <h3>Group - {style}</h3>
+                <h3>Group - {style}
                 <button onClick={() => removeStyleFromOrder(style)}>Remove group from order</button>
-                {groupedOrder[style].map((item) => (
-            <div key={item.id}>
-              * {item.name} - {item.quantity}
-              <button onClick={() => addBeerToOrder(item.name, 1, item.style)}> + </button>
-              <button onClick={() => removeBeerFromOrder(item.name)}>-</button>
-            </div>
-          ))}
+                </h3>
+                <ul>
+                  {groupedOrder[style].map((item, index) => (
+                    item.quantity > 0 ? (
+                      <li key={index}>
+                        {item.name} - {item.quantity}
+
+                          <button onClick={() => addBeerToOrder(item.name, 1, item.style)}>+</button>
+                          <button onClick={() => removeBeerFromOrder(item.name)}>-</button>
+                      </li>
+                    ) : null
+                  ))}
+                </ul>
               </div>
             ))}
-            <div>Total items: {currentOrder.reduce((acc, item) => acc + item.quantity, 0)}</div>
+            <div>Total items: {currentOrder.reduce((acc, item) => acc + item.quantity, 0)}
+            <button>Save Order</button>
+            </div>
           </>
         )}
       </div>
+      
     </div>
   );
 };

@@ -9,6 +9,7 @@ const SearchField = ({ beers, addStyleToOrder, addBeerToOrder, refreshBeers, rem
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
+  
 
   useEffect(() => {
     if (!beers) {
@@ -21,6 +22,7 @@ const SearchField = ({ beers, addStyleToOrder, addBeerToOrder, refreshBeers, rem
       )
     );
   }, [beers, inputValue]);
+
 
   const groupedBeers = _.groupBy(filteredItems, 'style');
 
@@ -38,8 +40,10 @@ const SearchField = ({ beers, addStyleToOrder, addBeerToOrder, refreshBeers, rem
             <div>
               {Object.keys(groupedBeers).map((style) => (
                 <div key={style}>
-                  <h3>{style}</h3>
+                  <h3>
+                    {style}
                   <button onClick={() => addStyleToOrder(style, 0)}> Add group to order </button>
+                  </h3>
                   {groupedBeers[style].map((item, index) => (
                     <div
                       {...getItemProps({
