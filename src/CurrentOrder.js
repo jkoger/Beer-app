@@ -1,7 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
-const CurrentOrder = ({ currentOrder, addBeerToOrder, removeStyleFromOrder, removeBeerFromOrder }) => {
+const CurrentOrder = ({ currentOrder, addBeerToOrder, removeStyleFromOrder, removeBeerFromOrder, saveOrder }) => {
   const groupedOrder = _.groupBy(currentOrder, 'style');
   
   return (
@@ -24,16 +31,32 @@ const CurrentOrder = ({ currentOrder, addBeerToOrder, removeStyleFromOrder, remo
             {Object.keys(groupedOrder).map((style) => (
               <div key={style}>
                 <h3>Group - {style}
-                <button onClick={() => removeStyleFromOrder(style)}>Remove group from order</button>
+
+                
+                <IconButton >
+                  <AddCircleIcon />
+                </IconButton>
+                
+                <IconButton >
+                  <RemoveCircleIcon />
+                </IconButton>
+
+                <IconButton onClick={() => removeStyleFromOrder(style)}>
+                  <DeleteIcon />
+                </IconButton>
                 </h3>
                 <ul>
                   {groupedOrder[style].map((item, index) => (
                     item.quantity > 0 ? (
                       <li key={index}>
-                        {item.name} - {item.quantity}
+                         {item.name} - {item.quantity}
+                         <IconButton onClick={() => addBeerToOrder(item.name, 1, item.style)}>
+                          <AddIcon />
+                         </IconButton>
 
-                          <button onClick={() => addBeerToOrder(item.name, 1, item.style)}>+</button>
-                          <button onClick={() => removeBeerFromOrder(item.name)}>-</button>
+                         <IconButton onClick={() => removeBeerFromOrder(item.name, item.style)}>
+                          <RemoveIcon />
+                         </IconButton>
                       </li>
                     ) : null
                   ))}
@@ -41,7 +64,7 @@ const CurrentOrder = ({ currentOrder, addBeerToOrder, removeStyleFromOrder, remo
               </div>
             ))}
             <div>Total items: {currentOrder.reduce((acc, item) => acc + item.quantity, 0)}
-            <button>Save Order</button>
+            <Button variant="contained" onClick={() => saveOrder()}>Save Order</Button>
             </div>
           </>
         )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Downshift from 'downshift';
 import _ from 'lodash';
+import Button from '@mui/material/Button';
 
 const SearchField = ({ beers, addStyleToOrder, addBeerToOrder, refreshBeers, removeFromOrder  }) => {
   const [inputValue, setInputValue] = useState('');
@@ -35,14 +36,14 @@ const SearchField = ({ beers, addStyleToOrder, addBeerToOrder, refreshBeers, rem
         <div style={{ margin: '20px' }}>
             <h2>Start typing to find available beers</h2>
           <input {...getInputProps({ onChange: handleInputChange })} value={inputValue} />
-          <button onClick={refreshBeers}> Refresh beer selection </button> 
+          <Button variant="contained" margin="5px" onClick={refreshBeers}> Refresh beer selection </Button> 
           {isOpen ? (
             <div>
               {Object.keys(groupedBeers).map((style) => (
                 <div key={style}>
                   <h3>
                     {style}
-                  <button onClick={() => addStyleToOrder(style, 0)}> Add group to order </button>
+                  <Button variant="contained" size="medium" onClick={() => addStyleToOrder(style, 0)}> Add group to order </Button>
                   </h3>
                   {groupedBeers[style].map((item, index) => (
                     <div
@@ -57,7 +58,7 @@ const SearchField = ({ beers, addStyleToOrder, addBeerToOrder, refreshBeers, rem
                       })}
                     >
                       {item.brand} - {item.name} 
-                      <button onClick={() => addBeerToOrder(item.name, 1, item.style)}> Add beer to order </button>
+                      <Button variant="contained" size="small" onClick={() => addBeerToOrder(item.name, 1, item.style)}> Add beer to order </Button>
                     </div>
                   ))}
                 </div>
