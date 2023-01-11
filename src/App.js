@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import BeerList from './BeerList'; 
 import CurrentOrder from './CurrentOrder';
 import SearchField from './SearchField';
 import { useLocalStorage } from './localStorage';
@@ -9,6 +8,7 @@ import HistoryBar from './historyBar';
 function App() {
   const [orders, setOrders] = useLocalStorage('orders', []);
   const [currentOrder, setCurrentOrder] = useState([]);
+  //const [currentOrder, setCurrentOrder] = useLocalStorage('currentOrder', []);
   const [beers, setBeers] = useState([]);
   const [refresh, setRefresh] = useState();
   const [orderNumber, setOrderNumber] = useState(1);
@@ -39,19 +39,18 @@ function App() {
       const updatedOrder = [...currentOrder];
       updatedOrder[index] = { style: style, quantity: updatedOrder[index].quantity + 0 };
       setCurrentOrder(updatedOrder);
-      console.log(updatedOrder);
     }
   };
 
-  const addBeerToOrder = (name, quantity, style) => {
+  const addBeerToOrder = (name, quantity, style, alcohol) => {
     const index = currentOrder.findIndex((item) => item.name === name);
     if (index === -1) {
-      setCurrentOrder([...currentOrder, { name: name, style: style, quantity: 1 }]);
+      setCurrentOrder([...currentOrder, { name: name, style: style, quantity: 1, alcohol: alcohol
+      }]);
     } else {
       const updatedOrder = [...currentOrder];
-      updatedOrder[index] = { name: name, style: style, quantity: updatedOrder[index].quantity + 1 };
+      updatedOrder[index] = { name: name, style: style, quantity: updatedOrder[index].quantity + 1, alcohol: alcohol};
       setCurrentOrder(updatedOrder);
-      console.log(updatedOrder);
     }
   };
 
@@ -59,7 +58,7 @@ function App() {
     setCurrentOrder(currentOrder.filter((item) => item.style !== style));
   };
 
-  const removeBeerFromOrder = (name) => {
+  const removeBeerFromOrder = (name, style, alcohol) => {
     const index = currentOrder.findIndex((item) => item.name === name);
     if (index !== -1) {
       const updatedOrder = [...currentOrder];
@@ -67,6 +66,7 @@ function App() {
         name: updatedOrder[index].name,
         style: updatedOrder[index].style,
         quantity: updatedOrder[index].quantity - 1,
+        alcohol: updatedOrder[index].alcohol
       };
       if (updatedOrder[index].quantity === 0) {
         updatedOrder.splice(index, 1);
@@ -87,16 +87,14 @@ function App() {
   };
 
   const saveOrder = () => {
-    const timestamp = new Date().toLocaleString(); // timestamp of when the order was created
-    // create an object that represents the order
+    const timestamp = new Date().toLocaleString(); 
     const newOrder = {
         id: orderNumber,
         timestamp: timestamp,
         items: currentOrder
     };
-    // use setOrders to save the new order
+    
     setOrders([...orders, newOrder]);
-    console.log("Saved order: ", newOrder);
     localStorage.setItem('orderNumber', orderNumber + 1)
     setOrderNumber(prev => prev + 1)
 }
@@ -106,11 +104,10 @@ function App() {
   return (
     <div className="App">
       <h1 style={{ textAlign: 'center' }}>Welcome to beer ordering app</h1>
-      <SearchField beers={beers} addStyleToOrder={addStyleToOrder} addBeerToOrder ={addBeerToOrder} refreshBeers={refreshBeers}/>
       <HistoryBar orders={orders}/>
-
+      <SearchField beers={beers} addStyleToOrder={addStyleToOrder} addBeerToOrder ={addBeerToOrder} refreshBeers={refreshBeers}/>
       {/* <BeerList refresh={refresh} setRefresh={setRefresh} /> */}
-      <CurrentOrder currentOrder={currentOrder} addStyleToOrder={addStyleToOrder} addBeerToOrder={addBeerToOrder} removeStyleFromOrder={removeStyleFromOrder} removeBeerFromOrder={removeBeerFromOrder} saveOrder={saveOrder}/>
+      <CurrentOrder beers={beers} currentOrder={currentOrder} addStyleToOrder={addStyleToOrder} addBeerToOrder={addBeerToOrder} removeStyleFromOrder={removeStyleFromOrder} removeBeerFromOrder={removeBeerFromOrder} saveOrder={saveOrder}/>
       
      
     </div>
